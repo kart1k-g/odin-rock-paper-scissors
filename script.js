@@ -85,4 +85,6 @@ function playGame(playerName){
     }
     displayResult(playerName, playerWins, compWins);
 }
-playGame();
+window.onload= ()=>{
+    playGame();
+}
