@@ -5,18 +5,18 @@
 function getComputerChoice(){
     return Math.floor(Math.random()*3);
 }
-function getPlayerChoice(){
-    let input=prompt("Rock, Paper or Scissors?");
-    input=input.toLowerCase();
+
+function getPlayerChoice(id){
     let choice=-1;
-    if(input==='rock')
+    if(id==='rock-btn')
         choice=0;
-    else if(input==='paper')
+    else if(id==='paper-btn')
         choice=1;
-    if(input==='scissors')
+    if(id==='scissors-btn')
         choice=2;
     return choice;
 }
+
 function decideWinner(playerChoice, compChoice){
     // 0=>"Computer"
     // 1=>"Player"
@@ -31,11 +31,13 @@ function decideWinner(playerChoice, compChoice){
     }
     return result;
 }
+
 function getName(){
     let playerName=prompt("You would like to be called...");
     return playerName;
 }
-function displayScoreBoard(result, round, playerName){
+
+function displayScoreBoard(result){
     switch(result){
         case 0:
             console.log(`Computer wins round ${round}`);
@@ -50,9 +52,8 @@ function displayScoreBoard(result, round, playerName){
             console.error("Error parsing result!!");
     }
 }
-function displayResult(playerName, playerWins, compWins){
-    console.log(`${playerName} wins: ${playerWins} times`);
-    console.log(`Computer wins: ${compWins} times`);
+
+function displayResult(){
     if(playerWins>compWins){
         console.log(`Congrats!! ${playerName} wins the game`);
     }
@@ -62,29 +63,52 @@ function displayResult(playerName, playerWins, compWins){
         console.log(`Game's a draw`);
     }
 }
-function playGame(playerName){
-    let round=0,
-    playerChoice=-1,
-    compChoice=-1,
+
+function playGame(playerChoice){
+    let compChoice=-1,
+    result=-1;
+    
+    round++;
+    compChoice=getComputerChoice();
+    
+    result=decideWinner(playerChoice, compChoice);
+
+    return result;
+    // displayResult(playerName, playerWins, compWins);
+}
+
+function manageGame(event){
+    const playerChoice=getPlayerChoice(event.target.id);
+    const result=playGame(playerChoice);
+    console.log(result);
+    displayScoreBoard(result);
+    if(result==0)
+        compWins++;
+    else if(result==1)
+        playerWins++;
+
+    if(compWins===5 || playerWins===5){
+        displayResult();
+        compWins=0;
+        playerWins=0;
+        round=0;
+    }
+}
+
+function initialise(){
+    playerName=getName();
+}
+
+
+const playBtns=document.querySelectorAll(".play-btn");
+playBtns.forEach((btn)=>{
+    btn.addEventListener("click", manageGame)
+});
+
+
+let round=0,
     playerWins=0,
     compWins=0, 
-    result=-1;
+    playerName;
 
-    playerName=getName();
-    while(round<5){
-        round++;
-        compChoice=getComputerChoice();
-        playerChoice=getPlayerChoice();
-
-        result=decideWinner(playerChoice, compChoice);
-        displayScoreBoard(result, round, playerName);
-        if(result==0)
-            compWins++;
-        else if(result==1)
-            playerWins++;
-    }
-    displayResult(playerName, playerWins, compWins);
-}
-window.onload= ()=>{
-    playGame();
-}
+window.addEventListener("load", initialise);
