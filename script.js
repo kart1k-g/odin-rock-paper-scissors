@@ -40,13 +40,13 @@ function getName(){
 function displayScoreBoard(result){
     switch(result){
         case 0:
-            console.log(`Computer wins round ${round}`);
+            scoreboardP.textContent=(`Computer wins round ${round}`);
             break;
         case 1:
-            console.log(`${playerName} wins round ${round}`);
+            scoreboardP.textContent=(`${playerName} wins round ${round}`);
             break;
         case 2: 
-            console.log(`Round ${round} is a draw`);
+            scoreboardP.textContent=(`Round ${round} is a draw`);
             break;
         default:
             console.error("Error parsing result!!");
@@ -55,12 +55,12 @@ function displayScoreBoard(result){
 
 function displayResult(){
     if(playerWins>compWins){
-        console.log(`Congrats!! ${playerName} wins the game`);
+        gameResultP.textContent=(`Congrats!! ${playerName} wins the game`);
     }
     else if(compWins>playerWins){
-        console.log(`${playerName} defeated. Computer wins the game`);
+        gameResultP.textContent=(`${playerName} defeated. Computer wins the game`);
     }else{
-        console.log(`Game's a draw`);
+        gameResultP.textContent=(`Game's a draw`);
     }
 }
 
@@ -77,10 +77,17 @@ function playGame(playerChoice){
     // displayResult(playerName, playerWins, compWins);
 }
 
+function resetGame(){
+    compWins=0;
+    playerWins=0;
+    round=0;
+    scoreboardP.textContent="";
+}
+
 function manageGame(event){
     const playerChoice=getPlayerChoice(event.target.id);
     const result=playGame(playerChoice);
-    console.log(result);
+
     displayScoreBoard(result);
     if(result==0)
         compWins++;
@@ -89,14 +96,14 @@ function manageGame(event){
 
     if(compWins===5 || playerWins===5){
         displayResult();
-        compWins=0;
-        playerWins=0;
-        round=0;
+        resetGame();
     }
 }
 
 function initialise(){
     playerName=getName();
+    scoreboardP=document.querySelector("#scoreboard");
+    gameResultP=document.querySelector("#game-result");
 }
 
 
@@ -109,6 +116,8 @@ playBtns.forEach((btn)=>{
 let round=0,
     playerWins=0,
     compWins=0, 
-    playerName;
+    playerName,
+    scoreboardP,
+    gameResultP, dummy;
 
 window.addEventListener("load", initialise);
